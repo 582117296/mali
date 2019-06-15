@@ -7,7 +7,7 @@ git init newrepo
 初始化后，会在 newrepo 目录下会出现一个名为 .git 的目录，所有 Git 需要的数据和资源都存放在这个目录中。
 ### 几个文件想要纳入版本控制
 1. 先用 git add 命令告诉 Git 开始对这些文件进行跟踪，然后提交：
-2. $ git add *.c     
+2. $ git add *.c     +++++++++++++++
    $ git add README
    $ git commit -m '初始化项目版本';
    //*.c是指将目录下的所有以.c结尾的文件和README文件都提交到仓库;
