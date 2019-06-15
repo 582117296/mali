@@ -1,0 +1,54 @@
+.text-small {
+    color: #999;
+    font-size: 12px;
+    margin-right: 20px;
+}
+body {
+    background:#ebebeb;
+}
+.borderRight{
+    border-right:1px solid #999;
+}
+.borderBottom{
+    border-bottom:1px solid #999;
+}
+.hr-style{
+    margin-top: 5px;
+    margin-bottom: 3px;
+    border: 0;
+    border-top: 1px solid #999;
+}
+.myimages{
+    width: 40px;
+    float: left;
+}
+.error{
+    margin-left: 120px;
+}
+.media-name{
+    padding-left: 50px;
+}
+.commentStyle{
+    margin: 15px 0;
+}
+.bottom{
+    float:right;
+    margin-bottom: 10px;
+}
+.bottomline{
+    border-bottom: 1px solid #999999;
+}
+.marginbootom{
+    margin-bottom: 12px;
+}
+.spancursor{
+    cursor: pointer;
+}
+.fontcolor{
+    color: #fbf7f7;
+}
+.nullcomment{
+    text-align:center;
+    color: #5f5d5d;
+}
+

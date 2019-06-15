@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link  rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}">
+    <link  rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap-theme.css}">
+    <link rel="stylesheet" th:href="@{/static/css/comunity.css}">
+    <script th:src="@{/webjars/jquery/1.11.1/jquery.js}" type="application/javascript"></script>
+    <script th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.js}" type="application/javascript"></script>
+    <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
+    <title th:text="${questionVo.getQuestion().getTitle()}"></title>
+    <script src="/static/js/jQuerysession.js"></script>
+    <script src="/static/js/myFunction.js"></script>
+</head>
+<body>
+<div th:insert="~{myTemplaten :: nav}"></div>
+<div class="container-fluid" style="margin:30px 80px 10px 80px;background: white">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 borderRight">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 marginbootom">
+                    <input type="hidden" id="questionId" name="questionId"
+                           th:value="${questionVo.getQuestion().getId()}">
+                    <h3 th:text="${questionVo.getQuestion().getTitle()}"></h3>
+                    <div class="media-body">
+                        发布者: <span class="text-small" th:text="${questionVo.getUser().getName()}"></span>
+                        <span class="text-small"
+                              th:text="${questionVo.getQuestion().getCommentCount()==null? 0:questionVo.getQuestion().getCommentCount()}+' 个回复&nbsp; '+${questionVo.getQuestion().getViewCount()==null? 0:questionVo.getQuestion().getViewCount()}+'次浏览&nbsp; '+' 最近更新:&nbsp; '+${#dates.format(questionVo.getQuestion().getGmtModifiled(), 'yyyy-MM-dd')}"></span>
+                    </div>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
+                         th:text="${questionVo.getQuestion().getDescription()}"></div>
+                    <hr class="col-lg-12 col-md-12 col-sm-12 col-xs-12 hr-style">
+                    <a th:if="${questionVo.getQuestion().getUserId()==questionVo.getUser().getId()}" class="text-small"
+                       th:href="@{'/publish/'+${questionVo.getQuestion().getId()}}">
+                        <span class="glyphicon glyphicon-edit " aria-hidden="true"></span>
+                        编辑
+                    </a>
+                    <button id="wolaida" type="button" name="false" class="btn btn-success"><span class="glyphicon glyphicon-edit"></span>我来答</button>
+                </div>
+
+                <!--回复框-->
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" >
+                    <div class="media-body" id="success_comment">
+                        <img class="media-object img-rounded myimages" width="50px" th:src="${questionVo.getUser().getAvatarUrl()}" alt="发布者头像">
+                        <h5 class="media-name" th:text="${questionVo.getUser().getName()}"></h5>
+                        <textarea id="content" class="form-control commentStyle" rows="8"></textarea>
+                        <div id="warning" class="alert alert-warning alert-dismissible " role="alert">
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>
+                            <strong>警告:</strong> &nbsp;&nbsp;<span id="errormassage"></span>
+                        </div>
+                        <button id="getComment" type="button" class="btn btn-success bottom">回复</button>
+                    </div>
+                </div>
+            </div>
+
+                <!--已评论区-->
+                <h4>评论区:</h4>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <h4><span th:text="${questionVo.getQuestion().getCommentCount()}"></span>个回复:</h4>
+                    <div class="media" th:each="comment,commentStat:${commentVo}">
+                        <div class="media-left">
+                            <a href="#">
+                                <img class="media-object img-rounded myimages" width="50px" th:src="@{${comment.user.avatarUrl}}" alt="发布者头像">
+                            </a>
+                        </div>
+                        <div class="media-body" th:id="${'comment-body-'+comment.id}">
+                            <h5 class="media-heading"><span th:text="${comment.user.name}"></span></h5>
+                            <div th:text="${comment.getContent()}">我是评论的内容</div>
+                            <div class="bottomline">
+                                <a class="text-small" th:href="@{'/publish/'+${comment.id}}">
+                                    <span class="glyphicon glyphicon-thumbs-up" aria-hidden="true"></span>
+                                    赞
+                                </a>
+                                <span class="glyphicon glyphicon-comment text-small spancursor"
+                                      th:id="${comment.id}"
+                                      th:onclick="|collapseComment(this)|" th:text="${comment.commentCount==null? 0+'人回复':comment.commentCount+'人回复'}">
+                                </span>
+                                <span class="pull-right text-small" th:text="'评论时间:'+${#dates.format(comment.getGmtModified(), 'yyyy-MM-dd')}" ></span>
+                            </div>
+
+                            <!--展示二级回复 aria-expanded="false"-->
+                            <div class="collapse" th:id="${'collapseExample-'+comment.id}" >
+                                <!--二级回复-->
+                                   <div class="well" ></div>
+                                       <div class="input-group">
+                                           <input type="text" class="form-control"
+                                                  placeholder="评论一下......"
+                                                  aria-describedby="basic-addon2" th:id="${'text-'+comment.id}">
+                                           <span class="input-group-addon spancursor btn-success fontcolor"
+                                                 th:onclick="|commnetFirst(${comment.id})|"
+                                                 th:id="${'basic-'+comment.id}"
+                                                 data-container="body" data-toggle="popover"
+                                                 data-placement="top" data-original-title title
+                                           >点我回复</span>
+                                       </div>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+        <!--右侧内容框-->
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12" >
+                <h4>发起人</h4>
+                <div class="media-body">
+                    <img class="media-object img-circle myimages" width="50px"
+                         th:src="${questionVo.getUser().getAvatarUrl()}" alt="发布者头像">
+                    <h4 class="media-name" th:text="${questionVo.getUser().getName()}"></h4>
+                </div>
+                <h4>相关问题</h4>
+            </div>
+    </div>
+</div>
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    社区将登录GitHub账号
+                </h4>
+            </div>
+            <div class="modal-body">
+                您还没有登录账号:点击登录即刻登录码力社区;点击返回取消登录!
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">
+                    返回
+                </button>
+                <button type="button" class="btn btn-primary" onclick="toLogin();">
+                    我已登录,请点我!
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<script>
+    $(function () { $('#myModal').modal('hide')});
+    $(function () {$('#success_comment').hide();});
+
+    $('#wolaida').click(function () {
+        if (this.name =="false"){
+            $('#success_comment').show();
+            this.name="true";
+        } else {
+            $('#success_comment').hide();
+            this.name="false";
+        }
+    });
+    //消失的时候
+    // $(function () {
+    //     $('#myModal').on('hidden.bs.modal', function () {
+    //     var item = window.localStorage.getItem("dodo");
+    //     if (item == "true") {
+    //         var content = $('#content').val();
+    //         window.localStorage.setItem("textarea",content);
+    //         window.location.reload();
+    //         $('#content').val(window.localStorage.getItem("textarea"));
+    //         window.localStorage.clear();
+    //     }
+    // });
+    // })
+</script>
+<script type="application/javascript">
+    toLogin=function (){
+        $(function () { $('#myModal').modal('hide')});
+        window.open("https://github.com/login/oauth/authorize?client_id=f4684bceff87cd6e648a&redirect_uri=http://localhost:8080/callback&scope=user&state=1");
+        window.localStorage.setItem("clear","true");
+        $(function () {
+            $('#myModal').on('hidden.bs.modal', function () {
+                while (true){
+                    for (var i = 0; i <window.localStorage.length ; i++) {
+                        if (window.localStorage[i].getItem("dodo")=="true"){
+                            break;
+                        }
+                    }
+                }
+                var content = $('#content').val();
+                debugger;
+                window.localStorage.setItem("textarea",content);
+                window.location.reload();
+                $('#content').val(window.localStorage.getItem("textarea"));
+                window.localStorage.clear();
+        });
+        });
+    };
+    
+    function flash(){
+        var item = window.localStorage.getItem("dodo");
+        if (item == "true") {
+            var content = $('#content').val();
+            debugger;
+            window.localStorage.setItem("textarea",content);
+            window.location.reload();
+            $('#content').val(window.localStorage.getItem("textarea"));
+            window.localStorage.clear();
+        }
+    }
+
+    $('#getComment').click(function () {
+        var questionId=$("#questionId").val();
+        var content=$("#content").val();
+        commnet(questionId,content,1);
+    });
+
+    //回复评论
+    commnetFirst=function (id) {
+        var content=$("#text-"+id).val();
+        var result = commnet(id,content,2);
+        if (result== false){
+            $("#basic-" + id).attr("aria-describedby", "popover331612");
+        }
+    }
+</script>
+</body>
+</html>

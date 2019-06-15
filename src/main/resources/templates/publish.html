@@ -1,0 +1,54 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>发布-问题</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link  rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}">
+    <link  rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap-theme.css}">
+    <link rel="stylesheet" th:href="@{/static/css/comunity.css}">
+    <script th:src="@{/webjars/jquery/1.11.1/jquery.js}"></script>
+    <script th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.js}" type="application/javascript"></script>
+    <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
+    <title>发布-码力社区</title>
+</head>
+<body >
+<div th:replace="myTemplaten.html :: nav"></div>
+        <div class="container-fluid" style="margin:30px 80px 10px 80px;background: white">
+            <div class="row">
+                <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+
+                    <h2> <span class="glyphicon glyphicon-retweet" aria-hidden="true"></span>发起提问</h2>
+                    <hr>
+                    <form action="/publish" method="post">
+                        <input type="hidden" id="id" name="id" th:if="${question!=null}" th:value="${question.getId()}" value="null">
+                        <div class="form-group">
+                            <label for="title">问题标题:(简单扼要)</label>
+                            <input type="text" class="form-control" th:value="${question!=null? question.getTitle():''}" id="title" name="title" placeholder="问题标题">
+                        </div>
+                        <div class="form-group">
+                            <label for="description">问题补充(必填:请参考右侧提示)</label>
+                            <textarea class="form-control"  th:text="${question!=null? question.getDescription():''}" id="description" name="description" cols="3" rows="10"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="tag">添加标签:</label>
+                            <input type="text" class="form-control"  th:value="${question!=null? question.getTag():''}" id="tag" name="tag" placeholder="添加标签,以','号隔开">
+                        </div>
+                        <div class="alert alert-danger" th:if="${error!=null}" th:text="${error}"></div>
+                        <button type="submit" class="btn btn-success" style="float: right;margin-bottom: 10px">发布</button>
+                        <hr>
+                    </form>
+                </div>
+                <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12" >
+                    <h3>问题发起指南:</h3>
+                    <ul>
+                        <li>· 问题标题: 请用精简的语言描述您发布的问题,不要超过25字;</li>
+                        <li>· 问题补充: 请详细补充您的问题内容,并确保问题描述清晰直观,并提供一些相关的资料</li>
+                        <li>· 选择标签: 选择一个或多个合适的标签,用逗号隔开,每个标签不得超过10字</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+</body>
+</html>

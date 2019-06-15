@@ -1,0 +1,103 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link  rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}">
+    <link  rel="stylesheet" th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap-theme.css}">
+    <link rel="stylesheet" th:href="@{/static/css/comunity.css}">
+    <script th:src="@{/webjars/jquery/1.11.1/jquery.js}" type="application/javascript"></script>
+    <script th:src="@{/webjars/bootstrap/3.3.7/js/bootstrap.js}" type="application/javascript"></script>
+    <script>document.write('<script src="http://' + (location.host || 'localhost').split(':')[0] + ':35729/livereload.js?snipver=1"></' + 'script>')</script>
+    <title>首页-码力社区</title>
+    <script src="../static/js/jQuerysession.js"></script>
+
+</head>
+<script type="application/javascript">
+    window.onload=function () {
+       var item = window.localStorage.getItem("clear");
+       if (item=="true"){
+           window.localStorage.setItem("dodo","true");
+           window.close();
+           window.localStorage.removeItem("clear");
+
+       }
+    };
+</script>
+<body>
+<div th:insert="~{myTemplaten :: nav}"></div>
+<div class="container-fluid" style="margin:30px 80px 10px 80px;background: white">
+    <div class="row">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 borderRight" id="list">
+            <h2> <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>发现</h2>
+            <hr>
+            <div class="media" th:each="question,questionStat:${paginationVo.getQuestionVos()}">
+                <div class="media-left">
+                    <a th:href="@{'/author/'+${question.getUser().getId()}}">
+                        <img class="media-object img-circle" width="50px" th:src="${question.getUser().getAvatarUrl()}"  alt="...">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading"><a th:href="@{'/question/'+${question.getQuestion().getId()}}" th:text="${question.getQuestion().getTitle()}"></a></h4>
+                    <p th:text="${question.getQuestion().getDescription()}">描述内容</p><br>
+                    <span class="text-small" th:text="${question.getQuestion().getCommentCount()==null? 0:question.getQuestion().getCommentCount()}+' 个回复&nbsp; '+${question.getQuestion().getViewCount()==null? 0:question.getQuestion().getViewCount()}+'次浏览&nbsp; '+' 最近更新:&nbsp; '+${#dates.format(question.getQuestion().getGmtModifiled(), 'yyyy-MM-dd')}"></span>
+                </div>
+                <hr class="hr-style">
+            </div>
+            <!--分页-->
+            <div id="Paginator" style="text-align: center">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        <li th:if="${paginationVo.showFirstPage}">
+                            <a href="/?page=1" aria-label="Previous">
+                                <span aria-hidden="true">首页</span>
+                            </a>
+                        </li>
+                        <li th:if="${paginationVo.showPrevious}">
+                            <a th:href="@{/(page=${paginationVo.page}-1)}" aria-label="Previous">
+                                <span aria-hidden="true">&lt;</span>
+                            </a>
+                        </li>
+                        <li th:each="page :${paginationVo.getPages()}" th:class="${paginationVo.page==page}? 'active' : ''"><a th:href="@{/(page=${page})}" th:text="${page}"></a></li>
+
+                        <li th:if="${paginationVo.showNext}">
+                            <a th:href="@{/(page=${paginationVo.page}+1)}" aria-label="Next">
+                                <span aria-hidden="true">&gt;</span>
+                            </a>
+                        </li>
+                        <li th:if="${paginationVo.showEndPage}">
+                            <a th:href="@{/(page=${paginationVo.getTotalPage()})}"  aria-label="Previous">
+                                <span aria-hidden="true">尾页</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+    </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12" >
+            <h3>热门话题:</h3>
+            <ul>
+                <li>· 问题标题: 请用精简的语言描述您发布的问题,不要超过25字;</li>
+                <li>· 问题补充: 请详细补充您的问题内容,并确保问题描述清晰直观,并提供一些相关的资料</li>
+                <li>· 选择标签: 选择一个或多个合适的标签,用逗号隔开,每个标签不得超过10字</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<script type="application/javascript">
+    $('#query').click(function () {
+        var question=$("#check").val();
+        if (question == "" || question == null || question == undefined){
+            return false;
+        }
+        console.log(question);
+        $.getJSON( "/?question="+question, function(data, textStatus, jqXHR) {
+            console.log(data);
+            console.log(textStatus);
+            console.log(jqXHR);
+            $("#list").load("#list");
+        });
+
+    });
+</script>
+</body>
+</html>
