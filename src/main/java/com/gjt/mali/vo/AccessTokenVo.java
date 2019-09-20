@@ -1,12 +1,11 @@
 package com.gjt.mali.vo;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 @Component
+//@PropertySource(value = "GitHub.properties")
 @ConfigurationProperties(prefix = "access")
-@PropertySource(value = "GitHub.properties")
 public class AccessTokenVo {
     private String client_id;
     private String client_secret;

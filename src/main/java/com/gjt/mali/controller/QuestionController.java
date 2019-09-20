@@ -29,4 +29,5 @@ public class QuestionController {
         model.addAttribute("commentVo", commentVoList);
         return "question";
     }
+
 }

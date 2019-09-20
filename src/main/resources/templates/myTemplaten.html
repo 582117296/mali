@@ -21,11 +21,12 @@
 
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="background-color: #499ef3;">
-                <form class="navbar-form navbar-left">
+                <form class="navbar-form navbar-left" action="/">
                     <div class="form-group">
                         <input type="text" id="check" class="form-control" placeholder="搜索问题">
                     </div>
                     <input type="button" class="btn btn-default" id="query" value="码力一下"/>
+                    <!--<button type="submit" class="btn btn-default">码力一下</button>-->
                 </form>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a class="fontcolor" href="https://github.com/login/oauth/authorize?client_id=f4684bceff87cd6e648a&redirect_uri=http://localhost:8080/callback&scope=user&state=1" th:if="${session.user==null}">登录我的码力</a></li>

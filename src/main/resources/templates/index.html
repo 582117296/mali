@@ -26,8 +26,8 @@
 <body>
 <div th:insert="~{myTemplaten :: nav}"></div>
 <div class="container-fluid" style="margin:30px 80px 10px 80px;background: white">
-    <div class="row">
-        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 borderRight" id="list">
+    <div class="row list">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12 borderRight">
             <h2> <span class="glyphicon glyphicon-list-alt" aria-hidden="true"></span>发现</h2>
             <hr>
             <div class="media" th:each="question,questionStat:${paginationVo.getQuestionVos()}">
@@ -90,11 +90,17 @@
             return false;
         }
         console.log(question);
-        $.getJSON( "/?question="+question, function(data, textStatus, jqXHR) {
-            console.log(data);
-            console.log(textStatus);
-            console.log(jqXHR);
-            $("#list").load("#list");
+        $.ajax({
+            url: "/?question="+question,
+            type: "get",
+            success: function(respMsg) {
+                alert("查询成功！");
+                console.log(respMsg);
+                // window.location.reload();
+            },
+            error: function(request) {
+                alert("Connection error:"+request.error);
+            }
         });
 
     });

@@ -32,12 +32,11 @@ public class HomeController {
         if (question!=null && !question.equals("")){
             questionExample.createCriteria().andTitleLike("%"+question+"%");
         }
-        System.out.println(question);
         Integer totalCount=questionService.queryQuestionCount(questionExample);
         if (page<1){
             page=1;
         }
-        if (page*limit>totalCount && totalCount%limit !=0){
+        if (page*limit>totalCount && totalCount % limit !=0){
             page=totalCount/limit +1;
         }
         int count=limit*(page-1);
@@ -58,4 +57,6 @@ public class HomeController {
         response.addCookie(cookie);
         return "redirect:/";
     }
+
+
 }

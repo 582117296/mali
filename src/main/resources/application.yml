@@ -25,7 +25,8 @@ spring:
     connectionProperties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
 
   redis:
-    host: 192.168.120.129
+#    host: 192.168.120.129
+    host: localhost
     port: 6379
     jedis:
       pool:
