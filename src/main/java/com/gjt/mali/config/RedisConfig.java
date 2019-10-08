@@ -14,8 +14,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 
-import java.lang.reflect.Method;
-
 @Configuration
 public class RedisConfig extends CachingConfigurerSupport {
     /**
@@ -23,19 +21,33 @@ public class RedisConfig extends CachingConfigurerSupport {
      */
     @Override
     public KeyGenerator keyGenerator() {
-        return new KeyGenerator() {
-            @Override
-            public Object generate(Object o, Method method, Object... objects) {
-                StringBuilder sb=new StringBuilder();
-                sb.append(o.getClass().getName());
-                sb.append(method.getName());
-                for (Object object : objects) {
-                    sb.append(object.toString());
-                }
-                System.out.println("调用Redis缓存Key : " + sb.toString());
-                return sb.toString();
-            }
-        };
+        return (o, method, objects) -> {
+			StringBuilder sb=new StringBuilder();
+			sb.append(o.getClass().getName());
+			sb.append(method.getName());
+			for (Object object : objects) {
+				sb.append(object.toString());
+			}
+			System.out.println("调用Redis缓存Key : " + sb.toString());
+			return sb.toString();
+		};
+		/**
+		 * 2019-09-25 15:56:27 修改
+		 * 源代码为下方，上优化为lamba表达式
+		 */
+//		return new KeyGenerator() {
+//			@Override
+//			public Object generate(Object o, Method method, Object... objects) {
+//				StringBuilder sb=new StringBuilder();
+//				sb.append(o.getClass().getName());
+//				sb.append(method.getName());
+//				for (Object object : objects) {
+//					sb.append(object.toString());
+//				}
+//				System.out.println("调用Redis缓存Key : " + sb.toString());
+//				return sb.toString();
+//			}
+//		};
     }
     /**
      * 采用RedisCacheManager作为缓存管理器
